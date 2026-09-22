@@ -1,0 +1,46 @@
+{
+  "forms": [
+    {
+      "rank": "E",
+      "title": "Awakened Shadow",
+      "level": 1,
+      "passive": "Base form. Every completed quest is foundational."
+    },
+    {
+      "rank": "D",
+      "title": "Hunter",
+      "level": 5,
+      "passive": "Momentum becomes more stable."
+    },
+    {
+      "rank": "C",
+      "title": "Executor",
+      "level": 12,
+      "passive": "Pressure chapters yield stronger execution."
+    },
+    {
+      "rank": "B",
+      "title": "Nightblade",
+      "level": 20,
+      "passive": "Equipment and skills begin to compound."
+    },
+    {
+      "rank": "A",
+      "title": "Elite Shadow",
+      "level": 30,
+      "passive": "High-difficulty quests become the normal training ground."
+    },
+    {
+      "rank": "S",
+      "title": "S-Rank Sovereign",
+      "level": 40,
+      "passive": "Presence is backed by deep execution history."
+    },
+    {
+      "rank": "MONARCH",
+      "title": "Shadow Monarch",
+      "level": 55,
+      "passive": "Final form. The system audits what was actually built."
+    }
+  ]
+}
