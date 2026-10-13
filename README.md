@@ -38,3 +38,7 @@ The app checks state schema, time model, navigation, rank pipeline, Build Forge,
 4. A failed self-test stops the Android build.
 5. On success, open the run → **Artifacts** → `ShadowSystem-final-apk`.
 6. Download `app-debug.apk` to Android and install it.
+
+## Windows desktop edition
+
+The Change 19 Windows app is packaged separately from Android. See [desktop/README.md](desktop/README.md) for setup, build, installer output, and save-transfer instructions. The evidence-based feature inventory and remaining release checks are in [DESKTOP_AUDIT.md](DESKTOP_AUDIT.md). The Windows GitHub Actions workflow uploads a downloadable installer artifact.

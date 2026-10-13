@@ -1,0 +1,12 @@
+[package]
+name = "shadow-system-winter-arc-desktop"
+version = "5.0.0"
+description = "Shadow System Winter Arc Windows desktop application"
+edition = "2021"
+rust-version = "1.90"
+
+[build-dependencies]
+tauri-build = { version = "=2.7.2" }
+
+[dependencies]
+tauri = { version = "=2.12.3" }

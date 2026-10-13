@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#10091c">
 <meta name="description" content="SHADOW SYSTEM // WINTER ARC — a dark progression system for building capability.">
 <title>SHADOW SYSTEM // WINTER ARC 90</title>
+<link rel="stylesheet" href="./desktop.css">
+<script>if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desktop-shell");</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800;900&display=swap');
 
@@ -611,7 +613,7 @@ body.shadow-mode .v6-advanced-panel{display:block!important}
   <div class="modal-box">
     <div class="modal-head"><h3>⇅ DATA VAULT</h3><button class="close" onclick="closeModal('dataModal')">×</button></div>
     <p class="small" style="line-height:1.6;margin-bottom:12px">Your state is stored locally. Export a portable JSON save for backup or moving to another browser. Importing replaces the current state.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><button class="control-btn primary" onclick="exportSave()">EXPORT JSON</button><button class="control-btn" onclick="document.getElementById('importFile').click()">IMPORT FILE</button><button class="control-btn" onclick="resetAll()">FACTORY RESET</button></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><div id="saveRecoveryNotice" class="small" style="display:none;border:1px solid rgba(255,102,143,.4);padding:12px;border-radius:12px;margin:0 0 12px;flex:1 1 100%;width:100%"><strong style="color:var(--red)">RECOVERY COPY AVAILABLE</strong><div id="saveRecoveryText" style="margin:6px 0"></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="control-btn" onclick="exportRecoverySave()">EXPORT PRESERVED SAVE</button><button id="recoveryAckButton" class="control-btn" style="display:none" onclick="acknowledgeRecoveryExport()">I SAVED IT</button></div></div><button class="control-btn primary" onclick="exportSave()">EXPORT JSON</button><button class="control-btn" onclick="document.getElementById('importFile').click()">IMPORT FILE</button><button class="control-btn" onclick="resetAll()">FACTORY RESET</button></div>
     <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importFile(event)">
     <textarea id="saveBox" rows="8" placeholder="Exported save appears here. You can also paste JSON and use IMPORT TEXT."></textarea>
     <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="control-btn" onclick="importText()">IMPORT TEXT</button></div>
@@ -707,7 +709,14 @@ const defaults=()=>({
   journal:'',events:[],habits:{water:false,sleep:false,stretch:false,plan:false},
   settings:{name:'MONARCH',multiplier:1,compact:false,reduced:false},lastSave:null,arc:'Winter Arc',customQuests:[],activity:[],skillPoints:0,unlockedSkills:[],artifacts:[],proofs:0,bossDamage:0,essence:0,threat:0,contract:{key:null,claimed:[]},bossWeek:null,equipment:{},skillXP:{},dungeon:{key:null,rooms:{},charge:0,recoveryClaimed:false},proofEntries:[],recoveryTokens:0,world:{phase:'NIGHT',weather:'CLEAR',resonance:0,corruption:0,heat:0,event:'NONE',lastEventDay:-1},loadouts:{active:0,sets:[{}, {}, {}]},equipmentXP:{},gearMastery:{},buildHistory:[],mastery:{},practiceLog:[],specializations:{},masteryMilestones:[],projects16:[],evidence16:[],beforeAfter16:{before:"",after:"",sealedAt:null},portfolioSeals16:[],selfTest:{lastRun:null,passed:false,checks:[],version:1}
 });
+const RECOVERY_KEY_SUFFIX=':recovery';
+let recoveredSave=null;
+let recoveryBackupUnavailable=false;
+let recoveryWarningShown=false;
+let recoveryExportReady=false;
 let state=loadState();
+if(!recoveredSave){try{recoveredSave=localStorage.getItem(KEY+RECOVERY_KEY_SUFFIX)||null}catch(e){}}
+if(recoveredSave)setTimeout(()=>toast('RECOVERY COPY AVAILABLE','Open the Data Vault to export the preserved save.'),900);
 if(!state.arcStartDate) state.arcStartDate=WINTER_START_DATE;
 function migrateState19(){
   state.version=19;
@@ -751,8 +760,9 @@ closeExpiredDays();
 let timer={duration:1500,left:1500,running:false,interval:null};
 
 function loadState(){
+  let raw=null;
   try{
-    const raw=localStorage.getItem(KEY); if(!raw)return defaults();
+    raw=localStorage.getItem(KEY); if(!raw)return defaults();
     const parsed=JSON.parse(raw), base=defaults();
     const s=Object.assign(base,parsed);
     s.grid=Array.isArray(parsed.grid)?parsed.grid.slice(0,DAYS*TASKS.length):base.grid;
@@ -771,11 +781,71 @@ function loadState(){
     s.events=Array.isArray(parsed.events)?parsed.events.slice(0,30):[];
     s.habits=Object.assign(base.habits,parsed.habits||{});s.customQuests=Array.isArray(parsed.customQuests)?parsed.customQuests.slice(0,30):[];s.activity=Array.isArray(parsed.activity)?parsed.activity.slice(-90):[];s.arc=parsed.arc||'Winter Arc';s.skillPoints=Number(parsed.skillPoints||0);s.unlockedSkills=Array.isArray(parsed.unlockedSkills)?parsed.unlockedSkills:[];s.artifacts=Array.isArray(parsed.artifacts)?parsed.artifacts:[];s.proofs=Number(parsed.proofs||0);s.bossDamage=Number(parsed.bossDamage||0);s.essence=Number(parsed.essence||0);s.threat=Number(parsed.threat||0);s.contract=Object.assign(base.contract,parsed.contract||{});s.contract.claimed=Array.isArray(s.contract.claimed)?s.contract.claimed:[];s.bossWeek=parsed.bossWeek||null;s.equipment=Object.assign({},parsed.equipment||{});s.skillXP=Object.assign({},parsed.skillXP||{});s.dungeon=Object.assign(base.dungeon,parsed.dungeon||{});s.dungeon.rooms=Object.assign({},(parsed.dungeon||{}).rooms||{});s.proofEntries=Array.isArray(parsed.proofEntries)?parsed.proofEntries.slice(-100):[];s.recoveryTokens=Number(parsed.recoveryTokens||0);s.world=Object.assign(base.world,parsed.world||{});s.loadouts=Object.assign(base.loadouts,parsed.loadouts||{});s.loadouts.sets=Array.isArray(s.loadouts.sets)?s.loadouts.sets.slice(0,3):[{}, {}, {}];while(s.loadouts.sets.length<3)s.loadouts.sets.push({});s.loadouts.active=Number(s.loadouts.active||0);s.equipmentXP=Object.assign({},parsed.equipmentXP||{});s.gearMastery=Object.assign({},parsed.gearMastery||{});s.buildHistory=Array.isArray(parsed.buildHistory)?parsed.buildHistory.slice(-30):[];s.mastery=Object.assign({},parsed.mastery||{});s.practiceLog=Array.isArray(parsed.practiceLog)?parsed.practiceLog.slice(-200):[];s.specializations=Object.assign({},parsed.specializations||{});s.masteryMilestones=Array.isArray(parsed.masteryMilestones)?parsed.masteryMilestones.slice(-50):[];s.projects16=Array.isArray(parsed.projects16)?parsed.projects16.slice(-30):[];s.evidence16=Array.isArray(parsed.evidence16)?parsed.evidence16.slice(-300):[];s.beforeAfter16=parsed.beforeAfter16||{before:"",after:"",sealedAt:null};s.portfolioSeals16=Array.isArray(parsed.portfolioSeals16)?parsed.portfolioSeals16.slice(-20):[];
     return s;
-  }catch(e){return defaults()}
+  }catch(e){
+    if(raw){
+      recoveredSave=raw;
+      try{
+        const recoveryKey=KEY+RECOVERY_KEY_SUFFIX;
+        if(localStorage.getItem(recoveryKey))recoveryBackupUnavailable=true;
+        else localStorage.setItem(recoveryKey,raw);
+      }catch(storageError){recoveryBackupUnavailable=true;}
+    }
+    return defaults();
+  }
 }
 function persist(){
+  if(recoveryBackupUnavailable){
+    if(!recoveryWarningShown){toast('SAVE PROTECTED','Saving is paused until you export the preserved save from the Data Vault.');recoveryWarningShown=true;}
+    updateRecoveryNotice();
+    return false;
+  }
   state.lastSave=new Date().toISOString();
-  localStorage.setItem(KEY,JSON.stringify(state));
+  try{
+    localStorage.setItem(KEY,JSON.stringify(state));
+    return true;
+  }catch(e){
+    recoveredSave=JSON.stringify(state);
+    try{
+      const recoveryKey=KEY+RECOVERY_KEY_SUFFIX;
+      if(!localStorage.getItem(recoveryKey))localStorage.setItem(recoveryKey,recoveredSave);
+    }catch{}
+    recoveryBackupUnavailable=true;
+    toast('SAVE ERROR','Saving is paused. Export the recovery copy before continuing.');
+    updateRecoveryNotice();
+    return false;
+  }
+}
+function updateRecoveryNotice(){
+  const box=document.getElementById('saveRecoveryNotice');
+  const message=document.getElementById('saveRecoveryText');
+  const ack=document.getElementById('recoveryAckButton');
+  if(!box)return;
+  if(!recoveredSave){box.style.display='none';return;}
+  box.style.display='block';
+  if(message)message.textContent=recoveryBackupUnavailable
+    ?'Saving is paused. Export this in-memory recovery copy and confirm before continuing.'
+    :'A previous save was preserved. Export it before clearing the recovery copy.';
+  if(ack)ack.style.display=recoveryExportReady?'inline-flex':'none';
+}
+function exportRecoverySave(){
+  if(!recoveredSave){try{recoveredSave=localStorage.getItem(KEY+RECOVERY_KEY_SUFFIX)||null}catch(e){}}
+  if(!recoveredSave){toast('NO RECOVERY COPY','No preserved save is available.');updateRecoveryNotice();return;}
+  document.getElementById('saveBox').value=recoveredSave;
+  const blob=new Blob([recoveredSave],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='shadow-system-recovery-'+todayKey()+'.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  recoveryExportReady=true;updateRecoveryNotice();
+  toast('RECOVERY EXPORTED','Confirm that you saved the preserved JSON file.');
+}
+function acknowledgeRecoveryExport(){
+  if(!recoveryExportReady){toast('EXPORT FIRST','Export the preserved save before continuing.');return;}
+  if(!confirm('Did you save the preserved recovery JSON file somewhere safe?'))return;
+  try{localStorage.removeItem(KEY+RECOVERY_KEY_SUFFIX)}catch(e){
+    recoveryBackupUnavailable=true;toast('SAVE PROTECTED','The recovery copy could not be cleared. Keep the exported file and try again.');updateRecoveryNotice();return;
+  }
+  recoveredSave=null;recoveryBackupUnavailable=false;recoveryExportReady=false;
+  if(!persist()){recoveryBackupUnavailable=true;updateRecoveryNotice();return;}
+  updateRecoveryNotice();toast('SAVE RECOVERY COMPLETE','Normal saving has resumed.');
 }
 function todayKey(){return new Date().toISOString().slice(0,10)}
 function currentDay(){ return elapsedDay(); }
@@ -1289,19 +1359,21 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 
 /* Data */
 function exportSave(){
+  if(recoveryBackupUnavailable){toast('EXPORT PRESERVED SAVE','Use the recovery export in the Data Vault before continuing.');return;}
   const txt=JSON.stringify(state,null,2);document.getElementById('saveBox').value=txt;
   const blob=new Blob([txt],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`moonlit-monarch-${todayKey()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);
   toast('DATA EXPORTED','Portable backup generated.');
 }
 function importText(){
+  if(recoveryBackupUnavailable){toast('SAVE PROTECTED','Export the preserved save and confirm before importing.');return;}
   try{const incoming=JSON.parse(document.getElementById('saveBox').value);if(!incoming||!Array.isArray(incoming.grid))throw Error();
     if(!confirm('Import this save and replace your current progress?'))return;
     state=Object.assign(defaults(),incoming);state.stats=Object.assign(defaults().stats,incoming.stats||{});state.settings=Object.assign(defaults().settings,incoming.settings||{});if(!state.arcStartDate)state.arcStartDate=WINTER_START_DATE;migrateState19();persist();renderAll();toast('SAVE IMPORTED','Protocol restored.')}
   catch(e){toast('IMPORT ERROR','That save file is not valid JSON.')}
 }
 function importFile(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById('saveBox').value=r.result;importText()};r.readAsText(f)}
-function resetAll(){if(!confirm('Factory reset the entire Shadow System?  This cannot be undone.'))return;state=defaults();persist();renderAll();toast('SYSTEM RESET','Fresh protocol initialized.');closeModal('dataModal')}
-function openModal(id){document.getElementById(id).classList.add('open');if(id==='settingsModal'){document.getElementById('playerName').value=state.settings.name;document.getElementById('xpMultiplier').value=state.settings.multiplier}}
+function resetAll(){if(recoveryBackupUnavailable){toast('SAVE PROTECTED','Export the preserved save and confirm before resetting.');return;}if(!confirm('Factory reset the entire Shadow System?  This cannot be undone.'))return;state=defaults();persist();renderAll();toast('SYSTEM RESET','Fresh protocol initialized.');closeModal('dataModal')}
+function openModal(id){document.getElementById(id).classList.add('open');if(id==='dataModal')updateRecoveryNotice();if(id==='settingsModal'){document.getElementById('playerName').value=state.settings.name;document.getElementById('xpMultiplier').value=state.settings.multiplier}}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 function saveSettings(){state.settings.name=document.getElementById('playerName').value.trim()||'MONARCH';state.settings.multiplier=Number(document.getElementById('xpMultiplier').value);persist();renderAll();toast('SETTINGS SAVED','Your command deck has been updated.')}
 function toggleCompact(){state.settings.compact=!state.settings.compact;document.body.classList.toggle('compact',state.settings.compact);persist()}

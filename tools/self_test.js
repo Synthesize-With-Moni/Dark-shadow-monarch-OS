@@ -44,6 +44,8 @@ check('ARC17_USES_DISPLAY_DAY',/function arc17Metrics\(\)\{initArc17\(\);const d
 check('ASCENSION_USES_DISPLAY_DAY',/function asc18Day\(\)\{return currentDayNumber\(\)\|\|0\}/.test(html),'ascension uses Day 1..90');
 check('MUTATION17_PRESENT',html.includes('MUTATION 17 // ARC INTELLIGENCE ENGINE'),'Mutation 17 retained');
 check('MUTATION18_PRESENT',html.includes('MUTATION 18 // MONARCH ASCENSION'),'Mutation 18 retained');
+check('CORRUPT_SAVE_RECOVERY',html.includes('KEY+RECOVERY_KEY_SUFFIX')&&html.includes('function exportRecoverySave'),'unreadable save contents are preserved and exportable');
+check('SAVE_FAILURE_GUARD',html.includes('function acknowledgeRecoveryExport')&&html.includes('SAVE PROTECTED'),'saving pauses after a storage failure until recovery is exported');
 const bad=checks.filter(x=>!x.ok);
 for(const c of checks)console.log(`${c.ok?'PASS':'FAIL'} ${c.id}${c.detail?' — '+c.detail:''}`);
 if(bad.length)fail(`${bad.length} check(s) failed`); else console.log(`SELF-TEST PASS — ${checks.length} checks`);

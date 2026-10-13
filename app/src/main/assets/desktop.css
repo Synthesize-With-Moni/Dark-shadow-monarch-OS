@@ -1,0 +1,133 @@
+/* Windows-only layout layer. The Android screens remain unchanged. */
+html.desktop-shell,
+html.desktop-shell body {
+  min-width: 1024px;
+  min-height: 100%;
+}
+
+html.desktop-shell body {
+  overflow-x: hidden;
+}
+
+html.desktop-shell .app {
+  width: calc(100% - 210px);
+  max-width: 1700px;
+  margin: 0 16px 0 194px;
+  padding: 20px 18px 30px;
+}
+
+html.desktop-shell .screen-nav {
+  position: fixed;
+  left: 14px;
+  top: 84px;
+  right: auto;
+  bottom: 14px;
+  transform: none;
+  width: 164px;
+  max-height: calc(100vh - 98px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(185, 145, 255, .45) transparent;
+}
+
+html.desktop-shell .nav-item {
+  flex: 0 0 42px;
+  min-height: 42px;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 7px 10px;
+  text-align: left;
+}
+
+html.desktop-shell .nav-item .nav-icon {
+  flex: 0 0 20px;
+  font-size: 17px;
+  text-align: center;
+}
+
+html.desktop-shell .nav-item .nav-label {
+  max-width: 100%;
+  font-size: 10px;
+  line-height: 1.15;
+  letter-spacing: .45px;
+  white-space: nowrap;
+  text-align: left;
+}
+
+html.desktop-shell .screen-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+html.desktop-shell .screen-nav::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(185, 145, 255, .45);
+}
+
+html.desktop-shell button:focus-visible,
+html.desktop-shell a:focus-visible,
+html.desktop-shell input:focus-visible,
+html.desktop-shell textarea:focus-visible,
+html.desktop-shell select:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+@media (max-height: 720px) {
+  html.desktop-shell .app {
+    padding-top: 14px;
+  }
+
+  html.desktop-shell .screen-nav {
+    top: 72px;
+    bottom: 10px;
+    max-height: calc(100vh - 82px);
+  }
+
+  html.desktop-shell .nav-item {
+    flex-basis: 38px;
+    min-height: 38px;
+  }
+}
+
+@media (max-width: 1120px) {
+  html.desktop-shell .app {
+    width: calc(100% - 188px);
+    margin-left: 172px;
+  }
+
+  html.desktop-shell .screen-nav {
+    width: 142px;
+  }
+
+  html.desktop-shell .nav-item {
+    gap: 7px;
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  html.desktop-shell .nav-item .nav-label {
+    font-size: 9px;
+  }
+
+  html.desktop-shell .hero,
+  html.desktop-shell .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.desktop-shell *,
+  html.desktop-shell *::before,
+  html.desktop-shell *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

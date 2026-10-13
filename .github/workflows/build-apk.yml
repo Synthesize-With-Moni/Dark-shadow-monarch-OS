@@ -43,6 +43,9 @@ jobs:
       - name: Change 19 system self-test
         run: node tools/self_test.js
 
+      - name: Verify save recovery behavior
+        run: node tools/test_storage_recovery.js
+
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
 

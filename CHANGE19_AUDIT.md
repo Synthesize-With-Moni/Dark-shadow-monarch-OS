@@ -20,7 +20,7 @@
 
 ## Static verification
 
-The Change 19 self-test currently passes **33 checks**, including:
+The Change 19 self-test currently passes **36 checks**, including:
 - JavaScript syntax
 - state schema
 - PRE-ARC model
@@ -38,6 +38,7 @@ The Change 19 self-test currently passes **33 checks**, including:
 - Android version metadata
 - workflow self-test integration
 - Mutation 17/18 retention
+- Corrupt-save recovery and save-failure guard
 
 ## Design rule
 
