@@ -33,6 +33,6 @@ The installer is written under `desktop/src-tauri/target/release/bundle/nsis/`. 
 
 Windows and Android keep separate local saves. The Windows app uses the WebView2 profile for its local browser storage; it does not silently copy Android WebView data or sync across devices. Use the app's Data Vault export on Android and import that JSON backup on Windows if you want to transfer progress.
 
-The interface and game systems are bundled locally. The existing Google Fonts import is optional for appearance; system font fallbacks remain available when offline.
+The interface, game systems, images and audio are bundled locally. The Windows package removes the remote Google Fonts request; offline-safe system fonts are used instead. The NSIS installer bundles the Evergreen WebView2 offline installer so setup can complete without an internet connection on a Windows PC that lacks the runtime. This makes the installer substantially larger (roughly 127 MB extra). Internet is needed by the cloud build runner to download build dependencies, but the installed application does not need internet for core use.
 
-The installer is not code-signed. Windows may show a publisher or SmartScreen warning until a signing certificate is configured.
+The app stores data locally in its Windows WebView2 profile. Keep regular Data Vault exports because Windows and Android saves are separate.\n\nThe installer is not code-signed. Windows may show a publisher or SmartScreen warning until a signing certificate is configured.

@@ -46,6 +46,14 @@ check('MUTATION17_PRESENT',html.includes('MUTATION 17 // ARC INTELLIGENCE ENGINE
 check('MUTATION18_PRESENT',html.includes('MUTATION 18 // MONARCH ASCENSION'),'Mutation 18 retained');
 check('CORRUPT_SAVE_RECOVERY',html.includes('KEY+RECOVERY_KEY_SUFFIX')&&html.includes('function exportRecoverySave'),'unreadable save contents are preserved and exportable');
 check('SAVE_FAILURE_GUARD',html.includes('function acknowledgeRecoveryExport')&&html.includes('SAVE PROTECTED'),'saving pauses after a storage failure until recovery is exported');
+
+const desktopConfig = JSON.parse(fs.readFileSync(path.join(root, 'desktop', 'src-tauri', 'tauri.conf.json'), 'utf8'));
+check('OFFLINE_FONT_ASSETS', !html.includes('fonts.googleapis.com') && !html.includes('fonts.gstatic.com'), 'no runtime Google Fonts request');
+check('OFFLINE_WEBVIEW2_INSTALLER', desktopConfig.bundle?.windows?.webviewInstallMode?.type === 'offlineInstaller', 'WebView2 runtime is bundled for offline setup');
+check('EVIDENCE_NO_TEXT_REWARD', /function recordProof\(\)[^\n]*state\.proofs=/.test(html) && !/function recordProof\(\)[^\n]*state\.xp\+=15/.test(html), 'proof entry does not mint XP');
+check('SIDE_QUEST_ONE_WAY', /function toggleCustomDeep\(i\)[^\n]*if\(q\.done\)/.test(html), 'side quest completion cannot be toggled for repeat rewards');
+check('SEALED_COMPARISON_IMMUTABLE', /function saveBeforeAfter16\(\)[^\n]*sealedAt/.test(html), 'comparison cannot be overwritten');
+
 const bad=checks.filter(x=>!x.ok);
 for(const c of checks)console.log(`${c.ok?'PASS':'FAIL'} ${c.id}${c.detail?' — '+c.detail:''}`);
 if(bad.length)fail(`${bad.length} check(s) failed`); else console.log(`SELF-TEST PASS — ${checks.length} checks`);
