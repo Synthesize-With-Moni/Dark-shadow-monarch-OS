@@ -4,7 +4,8 @@
 
 - Desktop work is based on Change 19 at 6ecd7a1 (versionName 5.0.0, Android versionCode 19) on the local codex/windows-desktop branch.
 - The app is an existing single-page HTML/CSS/JavaScript application inside the Android WebView project. The current screens and systems are retained and loaded as local Tauri frontend assets.
-- The available local history includes the Change 18 archive and earlier archives, but no separate Change 19 ZIP or full Change 1-19 archive. The public Change 19 repository snapshot is the source used here; this audit does not claim a byte-for-byte comparison against unavailable earlier files.
+- The available local history includes Change 5, Change 14, Change 18 and Fourth Change archives, but no separate Change 19 ZIP or complete Change 1-19 archive. The public Change 19 repository snapshot is the source used here; this audit does not claim a byte-for-byte comparison against unavailable earlier files.
+- A sampled comparison of 19 named feature markers across the available archives found that every marker present in those earlier files also appears in the Change 19 source. This confirms source-level retention for that sample, not that every earlier version was exhaustively compared or that each rule was behavior-tested.
 - Windows packaging uses Tauri 2 with the system WebView2 runtime and an NSIS setup executable. Android Gradle files and the APK workflow remain present.
 
 ## Feature inventory
@@ -38,6 +39,7 @@ The Windows workflow pins Node 22, pnpm 11.25.0, Rust 1.90.0, Tauri CLI 2.12.2 a
 
 1. Run the branch workflow and resolve any packaging failures.
 2. Verify the uploaded NSIS .exe exists and test its first launch, save persistence, import/export, upgrade and uninstall behavior.
-3. Run a controlled 90-day progression/save migration suite and compare the Change 18 archive for any unique behavior absent from Change 19.
+3. Expand the source comparison beyond the named marker sample and run a controlled 90-day progression/save migration suite.
 4. Run the Android APK workflow after the save-recovery addition.
 5. Sign the installer only if a signing certificate is later configured. The current installer is unsigned.
+
