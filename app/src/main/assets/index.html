@@ -637,7 +637,8 @@ body.shadow-mode .v6-advanced-panel{display:block!important}
 (function initSystemRouter(){
   const labels={home:'CORE // SHADOW',quests:'QUESTS // ACTIVE',dungeon:'DUNGEON // GATES',skills:'SKILLS // TREE',character:'CHARACTER // STATUS',world:'WORLD // REALM',inventory:'INVENTORY // BUILD FORGE',arc:'ARC // PROGRESSION',vault:'VAULT // PROOF ARCHIVE',more:'SYSTEM // COMMAND',ascension:'ASCENSION // FINAL FORM'};
   const nav=[...document.querySelectorAll('.nav-item[data-screen]')];
-  const sections=[...document.querySelectorAll('.layout .card.section')];
+  // Legacy cards use screen-hidden; mutation screens use screen-visible. Do not apply both routes to the same node.
+  const sections=[...document.querySelectorAll('.layout .card.section:not(.shadow-screen)')];
   const map={
     'CALIBRATION PROTOCOL':'home',
     'ACTIVE QUEST LOG':'quests',
