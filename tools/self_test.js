@@ -17,6 +17,19 @@ const required=[
  ['DAY90_ENV','min:90,max:90'],['DAY90_WORLD','d===90'],['RUNTIME_AUDIT','function runSystemSelfTest'],['CROSS_SCRIPT_RENDER_GUARD',"if(typeof renderArc17==='function')renderArc17()"],['LEGACY_TELEMETRY','function renderLegacyTelemetry']
 ];
 for(const [id,needle] of required)check(id,html.includes(needle),needle);
+// Exercise the real router with a minimal DOM double so destinations cannot regress to hidden.
+try {
+ const makeEl=(dataset={})=>({dataset,classList:{values:new Set(),toggle(name,on){on?this.values.add(name):this.values.delete(name);},contains(name){return this.values.has(name);}},handlers:{},addEventListener(name,fn){this.handlers[name]=fn;},querySelector(){return null;},scrollTo(){}});
+ const nav=['home','quests','dungeon','skills','character','world','inventory','arc','vault','ascension','more'].map(screen=>makeEl({screen}));
+ const shadow=['dungeon','skills','vault','world','inventory','ascension'].map(shadowScreen=>makeEl({shadowScreen}));
+ const legacy=[makeEl()],side=makeEl(),layout=makeEl(),body=makeEl();
+ const doc={body,querySelectorAll(selector){if(selector==='.nav-item[data-screen]')return nav;if(selector==='.layout .card.section:not(.shadow-screen)')return legacy;if(selector==='.shadow-screen')return shadow;return[];},querySelector(selector){if(selector==='.layout .sidecol')return side;if(selector==='.app>.layout')return layout;return null;},getElementById(){return null;}};
+ const start=js.indexOf('(function initSystemRouter(){'),end=js.indexOf('})();',start)+5;
+ const router=js.slice(start,end).replace('window.switchSystemScreen=function(name){','switchSystemScreen=function(name){window.switchSystemScreen=switchSystemScreen;');
+ new Function('document','window','switchSystemScreen',router)(doc,{},undefined);
+ for(const screen of ['dungeon','skills','vault','world','inventory','ascension']){nav.find(x=>x.dataset.screen===screen).handlers.click();const target=shadow.find(x=>x.dataset.shadowScreen===screen);if(!target.classList.contains('screen-visible')||target.classList.contains('screen-hidden'))throw Error(screen+' screen is not visible after navigation');}
+ check('ROUTER_SHADOW_DESTINATIONS_CLICKABLE',true,'six mutation screens become visible when selected');
+} catch(e) { check('ROUTER_SHADOW_DESTINATIONS_CLICKABLE',false,e.message); }
 const names=[...js.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)].map(m=>m[1]);
 const counts=new Map(); for(const n of names)counts.set(n,(counts.get(n)||0)+1);
 const dup=[...counts].filter(([,n])=>n>1).map(([n,c])=>`${n}×${c}`);
