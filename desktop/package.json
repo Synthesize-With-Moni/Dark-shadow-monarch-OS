@@ -4,8 +4,9 @@
   "private": true,
   "packageManager": "pnpm@11.25.0",
   "scripts": {
-    "desktop:dev": "tauri dev",
-    "desktop:build": "tauri build",
+    "desktop:prepare": "node prepare-frontend.cjs",
+    "desktop:dev": "pnpm run desktop:prepare && tauri dev",
+    "desktop:build": "pnpm run desktop:prepare && tauri build",
     "desktop:icons": "tauri icon ../app/src/main/res/drawable/monarch_icon.png --output src-tauri/icons"
   },
   "devDependencies": {

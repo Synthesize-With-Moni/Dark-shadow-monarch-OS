@@ -13,22 +13,28 @@ catch(e){ check('JS_SYNTAX', false, e.message); }
 const required=[
  ['STATE_SCHEMA','version:19'],['PRE_ARC_MODEL','function arcHasStarted'],['DAY_NUMBER_MODEL','function currentDayNumber'],
  ['WORLD_ROUTE','data-screen="world"'],['WORLD_LABEL',"world:'WORLD // REALM'"],['RANK_ENGINE','function rankFromXP'],
+ ['ROUTER_SEPARATES_SHADOW_SCREENS',".layout .card.section:not(.shadow-screen)"],
  ['BUILD_ENGINE','function buildStats'],['DUNGEON_THREAT_ENGINE','function dungeonThreat'],['COMBAT_BUILD_LINK','function combatPower'],['AURA_BUILD_LINK','function auraPower'],
  ['DAY90_ENV','min:90,max:90'],['DAY90_WORLD','d===90'],['RUNTIME_AUDIT','function runSystemSelfTest'],['CROSS_SCRIPT_RENDER_GUARD',"if(typeof renderArc17==='function')renderArc17()"],['LEGACY_TELEMETRY','function renderLegacyTelemetry']
 ];
 for(const [id,needle] of required)check(id,html.includes(needle),needle);
-// Exercise the real router with a minimal DOM double so destinations cannot regress to hidden.
+// Run the actual screen router against a tiny DOM double. This catches a
+// regression where the newer mutation screens are hidden by the legacy route.
 try {
  const makeEl=(dataset={})=>({dataset,classList:{values:new Set(),toggle(name,on){on?this.values.add(name):this.values.delete(name);},contains(name){return this.values.has(name);}},handlers:{},addEventListener(name,fn){this.handlers[name]=fn;},querySelector(){return null;},scrollTo(){}});
- const nav=['home','quests','dungeon','skills','character','world','inventory','arc','vault','ascension','more'].map(screen=>makeEl({screen}));
- const shadow=['dungeon','skills','vault','world','inventory','ascension'].map(shadowScreen=>makeEl({shadowScreen}));
- const legacy=[makeEl()],side=makeEl(),layout=makeEl(),body=makeEl();
+ const nav=[...['home','quests','dungeon','skills','character','world','inventory','arc','vault','ascension','more'].map(screen=>makeEl({screen}))];
+ const shadow=[...['dungeon','skills','vault','world','inventory','ascension'].map(shadowScreen=>makeEl({shadowScreen}))];
+ const legacy=[makeEl({})],side=makeEl(),layout=makeEl(),body=makeEl();
  const doc={body,querySelectorAll(selector){if(selector==='.nav-item[data-screen]')return nav;if(selector==='.layout .card.section:not(.shadow-screen)')return legacy;if(selector==='.shadow-screen')return shadow;return[];},querySelector(selector){if(selector==='.layout .sidecol')return side;if(selector==='.app>.layout')return layout;return null;},getElementById(){return null;}};
  const start=js.indexOf('(function initSystemRouter(){'),end=js.indexOf('})();',start)+5;
  const router=js.slice(start,end).replace('window.switchSystemScreen=function(name){','switchSystemScreen=function(name){window.switchSystemScreen=switchSystemScreen;');
  new Function('document','window','switchSystemScreen',router)(doc,{},undefined);
- for(const screen of ['dungeon','skills','vault','world','inventory','ascension']){nav.find(x=>x.dataset.screen===screen).handlers.click();const target=shadow.find(x=>x.dataset.shadowScreen===screen);if(!target.classList.contains('screen-visible')||target.classList.contains('screen-hidden'))throw Error(screen+' screen is not visible after navigation');}
- check('ROUTER_SHADOW_DESTINATIONS_CLICKABLE',true,'six mutation screens become visible when selected');
+ for(const screen of ['dungeon','skills','vault','world','inventory','ascension']){
+   nav.find(x=>x.dataset.screen===screen).handlers.click();
+   const target=shadow.find(x=>x.dataset.shadowScreen===screen);
+   if(!target.classList.contains('screen-visible')||target.classList.contains('screen-hidden'))throw Error(`${screen} screen is not visible after navigation`);
+ }
+ check('ROUTER_SHADOW_DESTINATIONS_CLICKABLE',true,'all six mutation screens become visible when selected');
 } catch(e) { check('ROUTER_SHADOW_DESTINATIONS_CLICKABLE',false,e.message); }
 const names=[...js.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)].map(m=>m[1]);
 const counts=new Map(); for(const n of names)counts.set(n,(counts.get(n)||0)+1);
@@ -59,13 +65,11 @@ check('MUTATION17_PRESENT',html.includes('MUTATION 17 // ARC INTELLIGENCE ENGINE
 check('MUTATION18_PRESENT',html.includes('MUTATION 18 // MONARCH ASCENSION'),'Mutation 18 retained');
 check('CORRUPT_SAVE_RECOVERY',html.includes('KEY+RECOVERY_KEY_SUFFIX')&&html.includes('function exportRecoverySave'),'unreadable save contents are preserved and exportable');
 check('SAVE_FAILURE_GUARD',html.includes('function acknowledgeRecoveryExport')&&html.includes('SAVE PROTECTED'),'saving pauses after a storage failure until recovery is exported');
-
-const desktopConfig = JSON.parse(fs.readFileSync(path.join(root, 'desktop', 'src-tauri', 'tauri.conf.json'), 'utf8'));
-check('OFFLINE_FONT_ASSETS', !html.includes('fonts.googleapis.com') && !html.includes('fonts.gstatic.com'), 'no runtime Google Fonts request');
-check('OFFLINE_WEBVIEW2_INSTALLER', desktopConfig.bundle?.windows?.webviewInstallMode?.type === 'offlineInstaller', 'WebView2 runtime is bundled for offline setup');
-check('EVIDENCE_NO_TEXT_REWARD', /function recordProof\(\)[^\n]*state\.proofs=/.test(html) && !/function recordProof\(\)[^\n]*state\.xp\+=15/.test(html), 'proof entry does not mint XP');
-check('SIDE_QUEST_ONE_WAY', /function toggleCustomDeep\(i\)[^\n]*if\(q\.done\)/.test(html), 'side quest completion cannot be toggled for repeat rewards');
-check('SEALED_COMPARISON_IMMUTABLE', /function saveBeforeAfter16\(\)[^\n]*sealedAt/.test(html), 'comparison cannot be overwritten');
+const rewardFree=['equipGear14','saveLoadout','recordProof','createProject16','addEvidence16','saveBeforeAfter16','sealReflection17'].every(name=>{const line=html.match(new RegExp('function '+name+'\\([^\\r\\n]*'))?.[0]||'';return line&&!/state\.(?:xp|essence)\s*\+=/.test(line)});
+check('NO_REWARD_FOR_RECORDING_OR_SAVING',rewardFree,'evidence, reflections, projects, and equipment cannot mint progression rewards');
+check('SEALED_RECORDS_IMMUTABLE',/function saveBeforeAfter16\([^\r\n]*sealedAt/.test(html)&&/function sealReflection17\([^\r\n]*reflections\[ch\]/.test(html),'sealed comparisons and chapter reflections cannot be overwritten');
+const desktopConfig=JSON.parse(fs.readFileSync(path.join(root,'desktop','src-tauri','tauri.conf.json'),'utf8'));
+check('OFFLINE_ASSETS',!html.includes('fonts.googleapis.com')&&!html.includes('fonts.gstatic.com')&&desktopConfig.bundle?.windows?.webviewInstallMode?.type==='offlineInstaller','no remote fonts; WebView2 offline runtime is bundled');
 
 const bad=checks.filter(x=>!x.ok);
 for(const c of checks)console.log(`${c.ok?'PASS':'FAIL'} ${c.id}${c.detail?' — '+c.detail:''}`);

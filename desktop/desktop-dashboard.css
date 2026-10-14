@@ -1,0 +1,246 @@
+html.desktop-shell,
+html.desktop-shell body {
+  --bg: #03040a;
+  --bg2: #080b18;
+  --text: #f5f2ff;
+  --muted: #aaa4bd;
+  --line: rgba(129, 142, 214, .22);
+  --pink: #9746ff;
+  --pink2: #d5adff;
+  --lilac: #a365ff;
+  --cyan: #63cfff;
+  --mint: #72e8b8;
+  background: #03040a;
+}
+html.desktop-shell body { margin: 0; height: 100dvh; overflow: hidden; color: #f4f1ff; }
+html.desktop-shell #space, html.desktop-shell #aurora { display: none !important; }
+html.desktop-shell .app {
+  box-sizing: border-box; width: 100%; height: 100dvh; min-height: 0; max-width: none; margin: 0;
+  padding: 114px 18px 16px 286px; overflow: hidden; display: flex; flex-direction: column;
+  background: radial-gradient(ellipse at 78% 0%, rgba(68, 43, 146, .13), transparent 38%), #03040a;
+}
+html.desktop-shell .app::after { content: ""; position: fixed; inset: 8px; z-index: 100; border: 1px solid rgba(139, 113, 235, .34); border-radius: 8px; pointer-events: none; }
+html.desktop-shell .system-header {
+  position: fixed; inset: 8px 16px auto; z-index: 70; height: 98px; box-sizing: border-box;
+  display: flex; align-items: center; gap: 18px; padding: 10px 26px;
+  border: 1px solid rgba(130, 111, 214, .3); border-radius: 8px 8px 0 0;
+  background-image: linear-gradient(90deg, rgba(3, 4, 12, .99) 0%, rgba(3, 4, 12, .9) 22%, rgba(3, 4, 12, .34) 48%, rgba(3, 4, 12, .52) 72%, rgba(3, 4, 12, .95) 100%), url('assets/desktop-header.png'), url('assets/world_night.webp');
+  background-size: 100% 100%, 575px 96px, cover; background-position: center, center, center 36%; background-repeat: no-repeat;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .32);
+}
+html.desktop-shell .ss-brand { flex: 0 0 305px; display: flex; align-items: center; gap: 13px; min-width: 265px; }
+html.desktop-shell .ss-brand-mark { flex: 0 0 58px; width: 58px; height: 70px; display: grid; place-items: center; overflow: hidden; }
+html.desktop-shell .ss-brand-mark img { width: 66px; height: 76px; object-fit: cover; mix-blend-mode: screen; }
+html.desktop-shell .ss-brand-copy { display: grid; gap: 6px; }
+html.desktop-shell .system-title { display: block; color: #f8f3ff; font: 800 14px "Segoe UI", system-ui, sans-serif; letter-spacing: 4px; white-space: nowrap; }
+html.desktop-shell .system-state { display: block; color: #c2a2ff; font: 700 9px "Segoe UI", system-ui, sans-serif; letter-spacing: 3px; }
+html.desktop-shell .ss-headline { flex: 1 1 auto; min-width: 140px; color: #ede6fb; font: 500 10px "Segoe UI", system-ui, sans-serif; letter-spacing: 1.2px; line-height: 1.45; }
+html.desktop-shell .ss-head-meta { flex: 0 0 260px; display: grid; gap: 7px; margin-right: 66px; color: #eee9ff; font: 600 10px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-head-meta small { color: #bcb5d1; font-size: 9px; }
+html.desktop-shell .top-actions { position: fixed; top: 37px; right: 27px; z-index: 85; display: flex; gap: 7px; }
+html.desktop-shell .top-actions .ss-icon-btn { width: 34px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 7px; color: #e6d8ff; background: rgba(17, 12, 34, .44); font: 18px "Segoe UI Symbol", "Segoe UI", sans-serif; }
+html.desktop-shell .top-actions .ss-icon-btn:hover { border-color: rgba(188, 147, 255, .5); background: rgba(105, 53, 202, .28); }
+html.desktop-shell .screen-nav {
+  position: fixed; inset: 114px auto 16px 16px; z-index: 65; box-sizing: border-box; width: 254px; max-height: none;
+  transform: none; display: flex; flex-direction: column; justify-content: flex-start; gap: 0; overflow-x: hidden; overflow-y: auto;
+  padding: 0 0 8px; border: 1px solid rgba(115, 122, 190, .25); border-radius: 0 0 9px 9px;
+  background: linear-gradient(180deg, rgba(7, 9, 21, .99), rgba(3, 4, 12, .99)); box-shadow: 14px 20px 40px rgba(0, 0, 0, .4); scrollbar-width: thin;
+}
+html.desktop-shell .nav-item {
+  box-sizing: border-box; flex: 0 0 44px; width: 100%; min-height: 44px; display: flex; flex-direction: row;
+  justify-content: flex-start; align-items: center; gap: 11px; padding: 7px 15px; border: 0; border-bottom: 1px solid rgba(118, 119, 171, .12);
+  border-radius: 0; color: #d0cce0; text-align: left; background: transparent; cursor: pointer;
+}
+html.desktop-shell .nav-item:hover { color: #fff; background: rgba(113, 77, 216, .14); }
+html.desktop-shell .nav-item.active { color: #fff; background: linear-gradient(90deg, rgba(115, 54, 228, .48), rgba(46, 32, 101, .34)); box-shadow: inset 3px 0 #bd62ff; }
+html.desktop-shell .nav-item .nav-icon { flex: 0 0 22px; color: #d8c1ff; font-size: 17px; text-align: center; }
+html.desktop-shell .nav-item .nav-label { max-width: 100%; color: inherit; font: 600 10px "Segoe UI", system-ui, sans-serif; letter-spacing: .05px; white-space: nowrap; text-align: left; }
+html.desktop-shell .ss-settings-nav { margin-top: 0; }
+html.desktop-shell .ss-sidebar-summary { flex: 1 0 270px; min-height: 270px; display: flex; flex-direction: column; margin: 10px 8px 0; overflow: hidden; border: 1px solid rgba(123, 106, 205, .23); border-radius: 9px; background: #070713; }
+html.desktop-shell .ss-sidebar-art { flex: 0 0 137px; border-bottom: 1px solid rgba(125, 107, 196, .2); background: linear-gradient(180deg, transparent 60%, rgba(4, 4, 13, .36)), url('assets/desktop-sidebar.png') center 48% / cover no-repeat; }
+html.desktop-shell .ss-sidebar-copy { padding: 10px 12px; color: #ddd5f5; }
+html.desktop-shell .ss-sidebar-kicker { color: #c5a4ff; font: 700 8px "Segoe UI", system-ui, sans-serif; letter-spacing: 2px; }
+html.desktop-shell .ss-sidebar-chapter { margin-top: 10px; font: 600 9px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-sidebar-day { margin-top: 4px; color: #c6bfd7; font: 600 9px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-sidebar-rank { display: flex; justify-content: space-between; gap: 8px; margin-top: 11px; padding-top: 9px; border-top: 1px solid rgba(125, 107, 196, .2); font: 600 9px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-sidebar-rank span { color: #aaa2bd; }
+html.desktop-shell .ss-progress { height: 7px; overflow: hidden; border-radius: 999px; background: rgba(196, 187, 224, .12); }
+html.desktop-shell .ss-progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #712cff, #b74dff, #9550ff); box-shadow: 0 0 12px rgba(156, 86, 255, .38); transition: width .25s ease; }
+html.desktop-shell .ss-sidebar-copy > .ss-progress { height: 5px; margin-top: 7px; }
+html.desktop-shell .ss-sidebar-links { display: flex; gap: 5px; margin-top: 10px; }
+html.desktop-shell .ss-sidebar-links button { flex: 1; min-width: 0; padding: 5px 3px; border: 1px solid rgba(155, 119, 255, .2); border-radius: 6px; color: #c9b4ff; background: rgba(114, 74, 215, .1); font: 700 7px "Segoe UI", system-ui, sans-serif; cursor: pointer; }
+html.desktop-shell .ss-sidebar-motto { margin: 10px 0 0; color: #9188ac; font: italic 9px "Segoe UI", system-ui, sans-serif; text-align: center; }
+html.desktop-shell .hero, html.desktop-shell .shadow-engine-strip, html.desktop-shell .footer { display: none !important; }
+html.desktop-shell .app > .layout {
+  flex: 1 1 auto; min-height: 0; height: 100%; overflow-x: hidden; overflow-y: auto; padding: 0 0 16px; margin: 18px 0 0;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; scrollbar-width: thin; scrollbar-color: rgba(147, 112, 255, .45) transparent;
+}
+html.desktop-shell .maincol { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+html.desktop-shell .sidecol { display: none; }
+html.desktop-shell .layout .sidecol:not(.screen-hidden) { display: flex; }
+html.desktop-shell .card { border: 1px solid rgba(105, 129, 199, .27); border-radius: 10px; color: #f2efff; background: linear-gradient(145deg, rgba(7, 11, 23, .98), rgba(3, 6, 15, .99)); box-shadow: 0 12px 34px rgba(0, 0, 0, .28); }
+html.desktop-shell .card:before { display: none; }
+html.desktop-shell .section { padding: 16px; }
+html.desktop-shell .section-title { color: #f0eaff; font: 700 12px "Segoe UI", system-ui, sans-serif; letter-spacing: .2px; }
+html.desktop-shell .section-sub { color: #aaa4bd; font: 400 10px "Segoe UI", system-ui, sans-serif; line-height: 1.5; }
+html.desktop-shell .control-btn, html.desktop-shell .pill-btn { border-radius: 8px; border-color: rgba(149, 115, 255, .31); background-color: rgba(24, 17, 46, .58); color: #eee7ff; }
+html.desktop-shell .control-btn.primary { border-color: #aa4dff; background: linear-gradient(100deg, #7626d7, #4922a3); box-shadow: 0 0 18px rgba(125, 54, 235, .2); }
+html.desktop-shell .control-btn:disabled { opacity: .48; cursor: not-allowed; }
+html.desktop-shell button { font-family: "Segoe UI", system-ui, sans-serif; transition: border-color .16s ease, background-color .16s ease, transform .16s ease; }
+html.desktop-shell button:not(:disabled):hover { border-color: rgba(196, 151, 255, .62); }
+html.desktop-shell button:focus-visible, html.desktop-shell a:focus-visible, html.desktop-shell input:focus-visible, html.desktop-shell textarea:focus-visible, html.desktop-shell select:focus-visible { outline: 2px solid #c497ff; outline-offset: 2px; }
+html.desktop-shell #desktopDashboard:not(.screen-visible) { display: none !important; }
+html.desktop-shell #desktopDashboard.screen-visible { display: block; }
+html.desktop-shell #desktopDashboard { margin: 0; padding: 0; overflow: visible; border: 0; background: transparent; box-shadow: none; }
+html.desktop-shell .ss-dashboard { display: grid; gap: 14px; min-height: 100%; }
+html.desktop-shell .ss-overview { position: relative; min-height: 214px; overflow: hidden; border: 1px solid rgba(100, 137, 214, .33); border-radius: 10px; background: linear-gradient(90deg, rgba(3, 5, 14, .72), rgba(3, 4, 14, .18)), url('assets/world_night.webp') center 46% / cover no-repeat; box-shadow: inset 0 -35px 70px rgba(0, 0, 0, .25); }
+html.desktop-shell .ss-overview::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2, 4, 13, .12), rgba(2, 4, 13, .72)); pointer-events: none; }
+html.desktop-shell .ss-welcome { position: relative; z-index: 1; box-sizing: border-box; height: 88px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 19px 21px 7px; }
+html.desktop-shell .ss-kicker { color: #c09bff; font: 700 8px "Segoe UI", system-ui, sans-serif; letter-spacing: 1.8px; }
+html.desktop-shell .ss-welcome h1 { margin: 6px 0 3px; color: #faf7ff; font: 700 21px "Segoe UI", system-ui, sans-serif; letter-spacing: .2px; }
+html.desktop-shell .ss-welcome p { margin: 0; color: #d3cde1; font: 400 11px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-welcome-quote { align-self: flex-start; margin: 1px 10px 0 0; color: #ddd5ee; font: italic 9px "Segoe UI", system-ui, sans-serif; letter-spacing: .45px; }
+html.desktop-shell .ss-status-cards { position: relative; z-index: 1; box-sizing: border-box; height: 111px; display: grid; grid-template-columns: 1.18fr 1.12fr .98fr; gap: 9px; padding: 0 15px 13px; }
+html.desktop-shell .ss-status-card { min-width: 0; display: flex; align-items: center; gap: 14px; padding: 10px 12px; border: 1px solid rgba(108, 142, 208, .23); border-radius: 9px; background: rgba(4, 7, 19, .83); }
+html.desktop-shell .ss-rank-card { padding-left: 13px; }
+html.desktop-shell .ss-rank-emblem { flex: 0 0 82px; width: 82px; height: 82px; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(169, 95, 255, .56); border-radius: 50%; background: radial-gradient(circle, rgba(105, 52, 195, .45), rgba(7, 5, 19, .86) 66%); box-shadow: inset 0 0 0 5px rgba(124, 65, 221, .12), 0 0 20px rgba(123, 66, 211, .17); }
+html.desktop-shell .ss-rank-emblem img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+html.desktop-shell .ss-status-main { min-width: 0; flex: 1; }
+html.desktop-shell .ss-card-label { display: block; color: #d8cbf4; font: 700 9px "Segoe UI", system-ui, sans-serif; letter-spacing: .8px; }
+html.desktop-shell .ss-status-card strong { display: block; margin-top: 5px; color: #f3edff; font: 700 19px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-status-card small { display: block; margin-top: 4px; color: #b4adc9; font: 400 8px "Segoe UI", system-ui, sans-serif; text-align: right; }
+html.desktop-shell .ss-status-main .ss-progress { margin-top: 6px; height: 7px; border: 1px solid rgba(139, 124, 199, .3); }
+html.desktop-shell .ss-arc-card { align-items: stretch; flex-direction: column; justify-content: center; gap: 0; padding: 10px 20px; }
+html.desktop-shell .ss-arc-card strong { margin-top: 3px; font-size: 14px; }
+html.desktop-shell .ss-arc-day { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; color: #f2edff; font: 600 13px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-arc-card .ss-progress { margin-top: 7px; height: 8px; border: 1px solid rgba(139, 124, 199, .3); }
+html.desktop-shell .ss-arc-card small { text-align: left; }
+html.desktop-shell .ss-next-card { padding-left: 22px; }
+html.desktop-shell .ss-next-emblem { flex: 0 0 52px; width: 52px; height: 58px; overflow: hidden; }
+html.desktop-shell .ss-next-emblem img { width: 58px; height: 58px; object-fit: cover; }
+html.desktop-shell .ss-next-card strong { font-size: 14px; }
+html.desktop-shell .ss-next-card small { text-align: left; }
+html.desktop-shell .ss-main-row { display: grid; grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr); gap: 14px; min-height: 270px; }
+html.desktop-shell .ss-panel { min-width: 0; box-sizing: border-box; padding: 15px; border: 1px solid rgba(102, 132, 201, .27); border-radius: 10px; background: linear-gradient(145deg, rgba(6, 10, 21, .98), rgba(3, 6, 15, .99)); }
+html.desktop-shell .ss-panel-head { min-height: 35px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+html.desktop-shell .ss-title-with-icon { min-width: 0; display: flex; align-items: flex-start; gap: 10px; }
+html.desktop-shell .ss-panel-icon { flex: 0 0 24px; width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid rgba(180, 98, 255, .8); border-radius: 7px; color: #e2b9ff; background: rgba(126, 49, 208, .19); font-size: 14px; }
+html.desktop-shell .ss-panel-title { color: #f4efff; font: 700 12px "Segoe UI", system-ui, sans-serif; letter-spacing: .15px; }
+html.desktop-shell .ss-panel-sub { margin-top: 3px; color: #b5afc8; font: 400 9px "Segoe UI", system-ui, sans-serif; line-height: 1.4; }
+html.desktop-shell .ss-link { border: 0; background: transparent; padding: 3px 1px; color: #c294ff; font: 600 8px "Segoe UI", system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
+html.desktop-shell .ss-link:hover { color: #f0ddff; }
+html.desktop-shell .ss-priority { padding: 4px 8px; border: 1px solid rgba(171, 70, 124, .4); border-radius: 999px; color: #ff9db9; font: 600 8px "Segoe UI", system-ui, sans-serif; white-space: nowrap; }
+html.desktop-shell .ss-mission-content { display: grid; grid-template-columns: minmax(0, 1fr) 214px; gap: 12px; }
+html.desktop-shell .ss-task-list { display: grid; gap: 4px; padding: 2px 0; }
+html.desktop-shell .ss-task { box-sizing: border-box; width: 100%; min-height: 38px; display: grid; grid-template-columns: 25px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 5px 8px; border: 1px solid transparent; border-bottom-color: rgba(135, 126, 181, .17); border-radius: 5px; color: inherit; background: rgba(255, 255, 255, .012); text-align: left; cursor: pointer; }
+html.desktop-shell .ss-task:hover { border-color: rgba(162, 113, 255, .42); background: rgba(101, 68, 189, .1); }
+html.desktop-shell .ss-task.is-done { border-color: rgba(104, 221, 177, .3); background: rgba(72, 174, 134, .07); }
+html.desktop-shell .ss-task:disabled { opacity: .58; cursor: not-allowed; }
+html.desktop-shell .ss-task-check { width: 18px; height: 18px; display: grid; place-items: center; border: 1px solid rgba(158, 133, 230, .6); border-radius: 50%; color: #baffdf; font-size: 10px; }
+html.desktop-shell .ss-task.is-done .ss-task-check { border-color: #63dbaa; background: rgba(67, 189, 140, .16); }
+html.desktop-shell .ss-task-name { display: block; color: #eee9fa; font: 600 9px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-task-desc { display: block; margin-top: 2px; color: #a9a2b8; font: 400 8px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-task-reward { color: #c4a1ff; font: 600 8px "Segoe UI", system-ui, sans-serif; white-space: nowrap; }
+html.desktop-shell .ss-reward-box { align-self: stretch; display: flex; flex-direction: column; gap: 8px; padding: 9px; border: 1px solid rgba(116, 125, 184, .24); border-radius: 8px; background: rgba(1, 4, 14, .68); }
+html.desktop-shell .ss-reward-title { padding-bottom: 5px; border-bottom: 1px solid rgba(135, 126, 181, .2); color: #c9b8ee; font: 700 9px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-reward-line { display: flex; justify-content: space-between; gap: 5px; color: #b9b2c8; font: 400 8px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-reward-line b { color: #efe8ff; font-size: 8px; white-space: nowrap; }
+html.desktop-shell .ss-start-mission { width: 100%; margin-top: auto; padding: 8px 5px; font-size: 9px; }
+html.desktop-shell .ss-arc-panel { display: flex; flex-direction: column; }
+html.desktop-shell .ss-arc-rail { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 1px; }
+html.desktop-shell .ss-chapter { min-width: 0; min-height: 83px; display: flex; flex-direction: column; align-items: center; padding: 6px 3px; border: 1px solid rgba(128, 121, 174, .18); border-top: 3px solid rgba(83, 44, 159, .42); border-radius: 6px; color: inherit; background: rgba(255, 255, 255, .018); text-align: center; cursor: pointer; }
+html.desktop-shell .ss-chapter:hover { background: rgba(91, 58, 180, .16); }
+html.desktop-shell .ss-chapter.is-current { border-color: rgba(161, 107, 255, .64); border-top-color: #b64cff; background: rgba(107, 56, 203, .2); box-shadow: 0 0 16px rgba(93, 58, 181, .12); }
+html.desktop-shell .ss-chapter.is-past { border-top-color: #ca52ff; }
+html.desktop-shell .ss-chapter b { color: #f1ebff; font: 700 10px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-chapter span { display: block; margin-top: 4px; color: #eee7fb; font: 600 8px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-chapter small { display: block; margin-top: 3px; color: #b8b0c9; font: 400 7px "Segoe UI", system-ui, sans-serif; white-space: nowrap; }
+html.desktop-shell .ss-mini-progress { width: 100%; height: 3px; margin-top: auto; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; }
+html.desktop-shell .ss-mini-progress i { display: block; height: 100%; background: linear-gradient(90deg,#8b38ef,#cf55ff); }
+html.desktop-shell .ss-today-progress { margin-top: auto; padding-top: 9px; border-top: 1px solid rgba(130, 122, 174, .2); }
+html.desktop-shell .ss-progress-label { display: flex; justify-content: space-between; color: #ddd5ef; font: 600 9px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-progress-label b { color: #ede5ff; }
+html.desktop-shell .ss-today-progress > .ss-progress { height: 8px; margin-top: 6px; }
+html.desktop-shell .ss-today-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 9px; border-top: 1px solid rgba(130, 122, 174, .18); }
+html.desktop-shell .ss-today-stats > div { display: grid; gap: 4px; padding: 7px 6px 0; border-right: 1px solid rgba(130, 122, 174, .18); }
+html.desktop-shell .ss-today-stats > div:first-child { padding-left: 0; }
+html.desktop-shell .ss-today-stats > div:last-child { border: 0; }
+html.desktop-shell .ss-today-stats span { color: #aaa3bf; font: 500 8px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-today-stats b { color: #f1eaff; font: 700 11px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-lower-row { display: grid; grid-template-columns: 1fr 1fr 1.05fr; gap: 14px; min-height: 272px; }
+html.desktop-shell .ss-lower-row > .ss-panel { min-height: 272px; }
+html.desktop-shell .ss-quest-row { min-height: 42px; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(130, 122, 174, .18); }
+html.desktop-shell .ss-quest-badge { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 9px; font-size: 13px; }
+html.desktop-shell .ss-quest-badge.purple { color: #d493ff; background: rgba(143, 72, 220, .18); }
+html.desktop-shell .ss-quest-badge.cyan { color: #63d7ff; background: rgba(37, 145, 211, .17); }
+html.desktop-shell .ss-quest-badge.green { color: #69e993; background: rgba(47, 173, 95, .16); }
+html.desktop-shell .ss-quest-badge.gold { color: #f0cc49; background: rgba(192, 145, 24, .15); }
+html.desktop-shell .ss-row-name { display: block; color: #eee9fa; font: 600 8px "Segoe UI", system-ui, sans-serif; line-height: 1.35; }
+html.desktop-shell .ss-row-meta { display: block; margin-top: 2px; color: #a7a0b6; font: 400 7px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-quest-count { min-width: 28px; padding: 4px 5px; border: 0; border-radius: 6px; color: #ded5f3; background: transparent; font: 600 8px "Segoe UI", system-ui, sans-serif; cursor: pointer; }
+html.desktop-shell .ss-quest-complete { border: 1px solid rgba(65, 212, 144, .4); color: #70edaa; background: rgba(41, 174, 108, .2); }
+html.desktop-shell .ss-quest-empty { padding: 7px 0; color: #9d96aa; font: 400 8px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-quest-form { display: flex; gap: 6px; margin-top: 8px; }
+html.desktop-shell .ss-quest-form input, html.desktop-shell .ss-quest-form select { min-width: 0; flex: 1; padding: 7px 8px; border: 1px solid rgba(129, 123, 174, .26); border-radius: 7px; color: #f1eaff; background: rgba(1, 4, 14, .7); font-size: 8px; }
+html.desktop-shell .ss-quest-form input[type="number"] { flex: 0 0 58px; }
+html.desktop-shell .ss-quest-form select { flex: 0 0 80px; }
+html.desktop-shell .ss-quest-form button { flex: 0 0 auto; padding: 6px 8px; border-radius: 7px; font-size: 8px; }
+html.desktop-shell .ss-achievement { min-height: 48px; display: grid; grid-template-columns: 31px minmax(0, 1fr); gap: 8px; align-items: center; border-bottom: 1px solid rgba(130, 122, 174, .18); }
+html.desktop-shell .ss-achievement-mark { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(169, 96, 255, .6); border-radius: 8px; color: #d79aff; background: rgba(111, 55, 194, .16); font-size: 15px; }
+html.desktop-shell .ss-achievement-name { display: block; color: #eee9fa; font: 600 8px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-achievement-desc { display: block; margin-top: 2px; color: #a7a0b6; font: 400 7px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-journal-entry { padding: 10px; border: 1px solid rgba(102, 132, 201, .18); border-radius: 8px; background: rgba(2, 5, 15, .7); }
+html.desktop-shell .ss-journal-meta { display: flex; align-items: center; gap: 9px; }
+html.desktop-shell .ss-journal-mark { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid rgba(156, 126, 220, .35); border-radius: 6px; color: #ddd0ff; font-size: 16px; }
+html.desktop-shell .ss-journal-meta b { display: block; color: #f1eaff; font: 600 9px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-journal-meta small { display: block; margin-top: 3px; color: #aaa3b9; font: 400 7px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-journal-edit { margin-left: auto; padding: 4px 6px; border: 1px solid rgba(150, 124, 219, .22); border-radius: 5px; color: #d1c3f1; background: rgba(255,255,255,.025); cursor: pointer; }
+html.desktop-shell .ss-journal { box-sizing: border-box; width: 100%; min-height: 108px; margin-top: 8px; padding: 8px; border: 0; border-radius: 5px; color: #e8e2f1; background: transparent; font: 400 8px/1.5 "Segoe UI", system-ui, sans-serif; resize: vertical; }
+html.desktop-shell .ss-journal::placeholder { color: #8f899e; }
+html.desktop-shell .ss-journal-tags { display: flex; gap: 5px; }
+html.desktop-shell .ss-journal-tags button { padding: 4px 8px; border: 1px solid rgba(143, 113, 217, .2); border-radius: 999px; color: #cbbaff; background: rgba(91, 67, 151, .18); font: 500 7px "Segoe UI", system-ui, sans-serif; cursor: pointer; }
+html.desktop-shell .ss-journal-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 5px; }
+html.desktop-shell .ss-journal-actions .control-btn { padding: 5px 9px; font-size: 8px; }
+html.desktop-shell .ss-kpi-sub { color: #aaa3b9; font: 400 7px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-quote-footer { min-height: 58px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 8px 16px; border: 1px solid rgba(122, 104, 190, .29); border-radius: 9px; background: linear-gradient(90deg, rgba(5, 4, 13, .88), rgba(6, 5, 18, .48), rgba(5, 4, 13, .88)), url('assets/world_eclipse.webp') center 52% / cover no-repeat; color: #e2d5fa; font: 500 10px "Segoe UI", system-ui, sans-serif; }
+html.desktop-shell .ss-quote-footer button { margin-left: auto; padding: 8px 12px; font-size: 8px; white-space: nowrap; }
+html.desktop-shell .ss-vault-journal { margin-top: 16px; }
+html.desktop-shell .ss-vault-journal textarea { min-height: 110px; }
+html.desktop-shell .topbar { gap: 12px; }
+html.desktop-shell .modal { z-index: 120; }
+html.desktop-shell .modal-box { max-width: 820px; max-height: 88dvh; overflow: auto; border: 1px solid rgba(157, 117, 255, .38); background: #080713; }
+html.desktop-shell input, html.desktop-shell textarea, html.desktop-shell select { color: #f0ebff; }
+html.desktop-shell .screen-hidden { display: none !important; }
+@media (max-width: 1280px) {
+  html.desktop-shell .app { padding-left: 236px; padding-right: 12px; }
+  html.desktop-shell .screen-nav { width: 208px; }
+  html.desktop-shell .ss-headline { display: none; }
+  html.desktop-shell .ss-lower-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html.desktop-shell .ss-lower-row > :last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 1080px) {
+  html.desktop-shell .app { padding-left: 198px; }
+  html.desktop-shell .screen-nav { width: 176px; }
+  html.desktop-shell .ss-main-row { grid-template-columns: 1fr; }
+  html.desktop-shell .ss-status-cards { grid-template-columns: 1fr 1fr 1fr; }
+  html.desktop-shell .ss-head-meta { flex-basis: 215px; }
+}
+@media (max-height: 800px) {
+  html.desktop-shell .system-header { height: 82px; }
+  html.desktop-shell .system-header { padding-top: 7px; padding-bottom: 7px; }
+  html.desktop-shell .ss-brand-mark { flex-basis: 48px; width: 48px; height: 52px; }
+  html.desktop-shell .ss-brand-mark img { width: 52px; height: 60px; }
+  html.desktop-shell .screen-nav { inset-block-start: 98px; }
+  html.desktop-shell .app { padding-top: 98px; }
+  html.desktop-shell .app > .layout { margin-top: 12px; }
+  html.desktop-shell .nav-item { flex-basis: 39px; min-height: 39px; }
+  html.desktop-shell .ss-overview { min-height: 196px; }
+  html.desktop-shell .ss-welcome { height: 77px; padding-top: 13px; }
+  html.desktop-shell .ss-status-cards { height: 104px; padding-bottom: 10px; }
+  html.desktop-shell .ss-main-row { min-height: 245px; }
+  html.desktop-shell .ss-lower-row, html.desktop-shell .ss-lower-row > .ss-panel { min-height: 247px; }
+  html.desktop-shell .ss-journal { min-height: 88px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.desktop-shell *, html.desktop-shell *::before, html.desktop-shell *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}

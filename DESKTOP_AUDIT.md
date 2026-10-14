@@ -1,45 +1,41 @@
-# Shadow System // Winter Arc - Windows Desktop Audit
+# Shadow System — Windows Desktop Audit
 
 ## Baseline and scope
 
-- Desktop work is based on Change 19 at 6ecd7a1 (versionName 5.0.0, Android versionCode 19) on the local codex/windows-desktop branch.
-- The app is an existing single-page HTML/CSS/JavaScript application inside the Android WebView project. The current screens and systems are retained and loaded as local Tauri frontend assets.
-- The available local history includes Change 5, Change 14, Change 18 and Fourth Change archives, but no separate Change 19 ZIP or complete Change 1-19 archive. The public Change 19 repository snapshot is the source used here; this audit does not claim a byte-for-byte comparison against unavailable earlier files.
-- A sampled comparison of 19 named feature markers across the available archives found that every marker present in those earlier files also appears in the Change 19 source. This confirms source-level retention for that sample, not that every earlier version was exhaustively compared or that each rule was behavior-tested.
-- Windows packaging uses Tauri 2 with the system WebView2 runtime and an NSIS setup executable. Android Gradle files and the APK workflow remain present.
+- The desktop package is based on local Change 19 (`6ecd7a1`, Android versionCode 19 / versionName 5.0.0) on `codex/windows-desktop`.
+- Android remains a single-page HTML/CSS/JavaScript WebView app. Tauri packages a generated copy of its local assets and adds the Windows dashboard without replacing the Android source or APK workflow. The Windows installer embeds the WebView2 offline runtime; Android keeps its existing Gradle/APK workflow.
+- The local archive does not contain every Change 1–19 file. A sampled comparison of 19 markers across the available archives found the sampled earlier markers in Change 19; it is not a full mutation-by-mutation audit.
+- Changes are committed locally and will be published with a normal fast-forward push; no force-push is used.
 
-## Feature inventory
+## Verification status
 
-WORKING means the named automated check passed. PARTIAL means there is a concrete implementation but important behavior or packaging checks remain. UNVERIFIED means the code is present, but this work has not exercised it end to end. These labels describe evidence, not a claim that every game rule is correct.
+`PASS` means the named automated check completed. `PARTIAL` or `UNVERIFIED` means the feature has not passed a full interactive Windows release check. Static source checks are not proof that every button or game rule works.
 
-| Area | Status | Evidence and remaining check |
+| Area | Status | Evidence and remaining work |
 |---|---|---|
-| Change 19 source and 11 routed screens | PARTIAL | The original HTML app and router remain. Routes cover Core, Quests, Dungeon, Skills, Character, World, Inventory, Arc, Vault, Ascension and System. Static checks confirm the World route and no duplicate function declarations; live navigation still needs a Windows run. |
-| 90-day calendar and day-state history | UNVERIFIED | The state includes 90-day mission, outcome, lock-time and penalty arrays; expired days are processed by closeExpiredDays(). Day-number and Day 90 mappings pass static checks. A controlled date-based progression run is still needed. |
-| Chapters, Arc milestones and Ascension | UNVERIFIED | The Arc intelligence and Monarch Ascension modules are present, and Mutation 17/18 markers remain. Chapter-by-chapter unlock and Day 90 evidence/report behavior have not been exercised. |
-| Character XP, level, rank, titles and achievements | UNVERIFIED | The XP/level/rank pipeline and achievement renderer are present. Reward, rank-boundary and persistence scenarios need behavioral tests. |
-| Daily/custom quests, bosses and dungeon challenges | UNVERIFIED | Quest, custom-quest, boss and dungeon state/handlers are present. Duplicate reward prevention and failure/recovery outcomes have not been simulated. |
-| Skill tree, mastery and specializations | UNVERIFIED | Skill unlock, capability mastery, practice and specialization data/renderers are present. Unlock costs and progression edges have not been exercised. |
-| Inventory, equipment and Build Forge | PARTIAL | Change 19 migration maps legacy artifact equipment into the Build Forge loadout and static checks confirm the build/combat/aura links. Save migration and equipment progression need scenario tests. |
-| Training, focus, learning, projects and proof of work | UNVERIFIED | Focus sessions, capability practice, project/evidence and proof-entry data are present. No end-to-end session or export/import scenario has been run. |
-| Journal, habits, analytics and end-of-Arc report | UNVERIFIED | Journal, habit, analytics and Ascension screens exist. The end report has not been checked against a completed 90-day history. |
-| Save persistence and portable backup/restore | PARTIAL | The app uses localStorage and JSON import/export. A data-loss path on corrupt JSON was repaired: corrupt content is copied to a recovery key before defaults are used; if writes fail, editing pauses and the current recovery copy can be exported. The new Node behavior test passes corrupt-save and quota-failure cases. A full app restart and backup/restore round trip remains unverified. |
-| Offline use | PARTIAL | Main HTML, JavaScript and image assets are bundled locally. Google Fonts is an optional external import with system fallbacks; the no-network launch has not been run. |
-| Desktop title, sizing, icon, navigation and installer | PARTIAL | Tauri config defines a resizable 1360x900 window, a 1024x680 minimum, app identity, icon generation and a current-user NSIS setup. The Windows workflow is configured, but no installer is verified until the branch workflow succeeds. |
-| Android APK workflow | UNVERIFIED | Android source and the existing build workflow are retained; the only workflow addition runs the new save-recovery behavior test. This PC has no Android SDK/JDK and its Gradle wrapper is a stub, so no local APK regression build was possible. The prior Change 19 Actions run passed before these edits. |
-| Integrity checks and duplicate definitions | WORKING | node tools/self_test.js passes 36 checks, including JavaScript syntax, state schema, day mappings, route presence, asset references, Change 19 systems, and duplicate-function detection. node tools/test_storage_recovery.js passes all three recovery scenarios. |
+| Desktop frontend preparation | PASS | `node desktop/prepare-frontend.cjs` assembled 173 bundled assets. Its separate generated copy leaves the Android HTML source intact. |
+| Change 19 integrity | PASS | `node tools/self_test.js` passed 38 checks, including syntax, route destinations, assets, version and save-recovery guards. |
+| Save recovery | PASS | `node tools/test_storage_recovery.js` passed three corrupt-save and storage-failure scenarios. |
+| Desktop navigation and wiring | PARTIAL | Static frontend checks pass and all 11 destination links are now visible, including Living World, Personal Arc and Lifetime Record. A live click-through has not been completed. The browser tool rejected local app-file access and explicitly disallowed alternate browser routes, so no workaround was attempted. |
+| User customization | PARTIAL | Name, arc name and goal, start/end dates, up to 12 route stages, existing routine names/descriptions/rewards/active state, and custom quest definitions are editable. Routine count and per-stage date boundaries are not user-defined. One arc is limited to 100 years. |
+| Lifetime calendar and progression | PARTIAL | Start dates use the current machine-local date by default; historical dates remain selectable and missed days are not sealed. The lifetime day counter continues after an arc ends and the route repeats in cycles. Some inherited Arc/Ascension screens and metrics still use fixed Day 90 language and need a wider redesign. Calendar entries currently use the system clock; Google events are not synced. |
+| Custom quest library | PASS / PARTIAL | `node tools/test_custom_quest_rewards.js` checks zero-XP rewards, edited rewards, recurring quest completion and undo accounting. Removal now archives a quest and its period history, with a restore action. Real WebView click and save-reload behavior still need a Windows test. |
+| Google Calendar | NOT IMPLEMENTED | No OAuth client, Google sign-in, event import, token handling or sync conflict handling exists in this source. A public release needs the publisher's desktop OAuth client ID and a complete consent/sync flow. User-pasted private iCal links are not a safe shortcut. |
+| Other progression modules | UNVERIFIED | Character, skills, equipment, bosses, dungeons, evidence, journal and analytics code is present. Their reward boundaries, migrations and save round trips have not been exercised end to end. |
+| Local data and profiles | PARTIAL | JSON export/import and local recovery are present. This build has no service account or cloud sync; each Windows account has a local WebView profile. |
+| Offline installer | PARTIAL | Tauri is configured to embed Microsoft's WebView2 offline installer. The app's bundled core does not need internet after setup; this configuration increases the installer by about 127 MB. Installer creation and a no-network installation have not been run for the current changes. |
+| Current Windows executable | NOT BUILT HERE | A prior Actions run produced an installer for an earlier state, documented in the previous audit. It does not include today's uncommitted changes. Rust/Cargo are not installed in this local environment, so the native Tauri build could not run. The checked-in Actions workflow can build after changes are committed and pushed, but no upload was made. |
+| Android workflow | UNVERIFIED | Android source and workflow remain in place. The available PC has no Android SDK/JDK and the local Gradle wrapper is a stub, so an APK regression build was not possible. |
 
-## Desktop choice and security
+## Release configuration
 
-Tauri fits this source because it is a local static WebView application with no Android JavaScript bridge, no network-backed core feature, and existing browser storage and JSON transfer. The desktop package uses WebView2, keeps Android storage separate, and grants only Tauri's default core window capability; it does not add broad filesystem or shell permissions.
+Tauri 2 uses Windows WebView2 and an NSIS per-user installer. The workflow pins Node 22, pnpm 11.25.0, Rust 1.90.0, Tauri CLI 2.12.2 and Tauri 2.12.3. The Cargo dependency graph is not yet locked with a committed `Cargo.lock`. The installer is unsigned, so SmartScreen may show an unknown-publisher warning.
 
-The Windows workflow pins Node 22, pnpm 11.25.0, Rust 1.90.0, Tauri CLI 2.12.2 and Tauri 2.12.3. The pnpm lockfile is committed. The Rust lockfile and actual Windows build are still pending verification on the Windows runner.
+## Remaining release work
 
-## Remaining release checks
-
-1. Run the branch workflow and resolve any packaging failures.
-2. Verify the uploaded NSIS .exe exists and test its first launch, save persistence, import/export, upgrade and uninstall behavior.
-3. Expand the source comparison beyond the named marker sample and run a controlled 90-day progression/save migration suite.
-4. Run the Android APK workflow after the save-recovery addition.
-5. Sign the installer only if a signing certificate is later configured. The current installer is unsigned.
-
+1. Make the inherited fixed 90-day screens and metrics reflect the user's chosen route and remain editable for life.
+2. Finish add/remove/custom schedule behavior for routines and route stages, and preserve records when dates or definitions change.
+3. Implement publisher-configured Google OAuth and Calendar sync, including offline changes and conflict recovery.
+4. Run a real Windows installer build, installation, first launch, navigation, persistence, export/import, upgrade/uninstall and offline checks.
+5. Run Android CI after the latest source changes and review a complete Change 1–19 archive if one becomes available.
+6. Commit `Cargo.lock` and configure code signing before public distribution.

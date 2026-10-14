@@ -12,6 +12,8 @@ on:
       - "app/src/main/res/drawable/monarch_icon.png"
       - "tools/self_test.js"
       - "tools/test_storage_recovery.js"
+      - "tools/desktop_frontend_test.js"
+      - "tools/test_custom_quest_rewards.js"
       - ".github/workflows/build-windows-desktop.yml"
   pull_request:
     branches:
@@ -23,6 +25,8 @@ on:
       - "app/src/main/res/drawable/monarch_icon.png"
       - "tools/self_test.js"
       - "tools/test_storage_recovery.js"
+      - "tools/desktop_frontend_test.js"
+      - "tools/test_custom_quest_rewards.js"
       - ".github/workflows/build-windows-desktop.yml"
   workflow_dispatch:
 
@@ -61,6 +65,10 @@ jobs:
         working-directory: desktop
         run: pnpm install --frozen-lockfile
 
+      - name: Assemble Windows-only frontend from Change 19
+        working-directory: desktop
+        run: pnpm run desktop:prepare
+
       - name: Generate Windows app icons
         working-directory: desktop
         run: pnpm run desktop:icons
@@ -70,6 +78,12 @@ jobs:
 
       - name: Verify save recovery behavior
         run: node tools/test_storage_recovery.js
+
+      - name: Verify Windows dashboard wiring
+        run: node tools/desktop_frontend_test.js
+
+      - name: Verify custom quest reward reversal
+        run: node tools/test_custom_quest_rewards.js
 
       - name: Build NSIS installer
         working-directory: desktop
